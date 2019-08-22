@@ -6,4 +6,4 @@ Jhoan Sebastian Diaz Salamanca
 201819861	
 2019-2 
 
-gitttttttt
+jhoan es un marica

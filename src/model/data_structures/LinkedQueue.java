@@ -3,39 +3,38 @@ package model.data_structures;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class ListaEncadenada<Item> implements Iterable<Item> {
-	
-	private int n;
-	private Node first;
-	private Node last;
-	
-	private class Node {
-		private Item item;
-		private Node next;
-	}
-	
-	public ListaEncadenada()
-	{
-		first = null;
-		last = null;
-		n = 0;
-		//assert check();
-	}
-	
-	public boolean isEmpty() {
+
+public class LinkedQueue<Item> implements Iterable<Item> {
+    private int n;         
+    private Node first;    
+    private Node last;     
+
+    private class Node {
+        private Item item;
+        private Node next;
+    }
+
+    public LinkedQueue() {
+        first = null;
+        last  = null;
+        n = 0;
+        assert check();
+    }
+
+    public boolean isEmpty() {
         return first == null;
     }
-	
-	public int size() {
+
+    public int size() {
         return n;     
     }
-	
-	public Item peek() throws Exception {
+
+    public Item peek() {
         if (isEmpty()) throw new NoSuchElementException("Queue underflow");
         return first.item;
     }
-	
-	public void agregar(Item item) {
+
+    public void enqueue(Item item) {
         Node oldlast = last;
         last = new Node();
         last.item = item;
@@ -43,27 +42,27 @@ public class ListaEncadenada<Item> implements Iterable<Item> {
         if (isEmpty()) first = last;
         else           oldlast.next = last;
         n++;
-        //assert check();
+        assert check();
     }
-	
-	public Item eliminar() throws Exception {
+
+    public Item dequeue() {
         if (isEmpty()) throw new NoSuchElementException("Queue underflow");
         Item item = first.item;
         first = first.next;
         n--;
-        if (isEmpty()) last = null;   // to avoid loitering
-       //assert check();
+        if (isEmpty()) last = null;   
+        assert check();
         return item;
     }
-	
-	public String toString() {
+
+    public String toString() {
         StringBuilder s = new StringBuilder();
         for (Item item : this)
             s.append(item + " ");
         return s.toString();
     } 
-	
-	private boolean check() {
+
+    private boolean check() {
         if (n < 0) {
             return false;
         }
@@ -82,14 +81,12 @@ public class ListaEncadenada<Item> implements Iterable<Item> {
             if (first.next == null) return false;
             if (last.next  != null) return false;
 
-            // check internal consistency of instance variable n
             int numberOfNodes = 0;
             for (Node x = first; x != null && numberOfNodes <= n; x = x.next) {
                 numberOfNodes++;
             }
             if (numberOfNodes != n) return false;
 
-            // check internal consistency of instance variable last
             Node lastNode = first;
             while (lastNode.next != null) {
                 lastNode = lastNode.next;
@@ -99,14 +96,12 @@ public class ListaEncadenada<Item> implements Iterable<Item> {
 
         return true;
     } 
+ 
+    public Iterator<Item> iterator()  {
+        return new ListIterator();  
+    }
 
-	@Override
-	public Iterator<Item> iterator() {
-		// TODO Auto-generated method stub
-		return new ListIterator(); 
-	}
-	
-	private class ListIterator implements Iterator<Item> {
+    private class ListIterator implements Iterator<Item> {
         private Node current = first;
 
         public boolean hasNext()  { return current != null;                     }
@@ -119,17 +114,18 @@ public class ListaEncadenada<Item> implements Iterable<Item> {
             return item;
         }
     }
-	
-	public static void main(String[] args) {
-		ListaEncadenada<String> queue = new ListaEncadenada<String>();
-     //   while (!StdIn.isEmpty()) {
-       //     String item = StdIn.readString();
-           // if (!item.equals("-"))
-        //        queue.enqueue(item);
-      //      else if (!queue.isEmpty())
-       //         StdOut.print(queue.dequeue() + " ");
-        //}
-      //  StdOut.println("(" + queue.size() + " left on queue)");
+
+
+
+    public static void main(String[] args) {
+        LinkedQueue<String> queue = new LinkedQueue<String>();
+        while (!StdIn.isEmpty()) {
+            String item = StdIn.readString();
+            if (!item.equals("-"))
+                queue.enqueue(item);
+            else if (!queue.isEmpty())
+                StdOut.print(queue.dequeue() + " ");
+        }
+        StdOut.println("(" + queue.size() + " left on queue)");
     }
 }
-
